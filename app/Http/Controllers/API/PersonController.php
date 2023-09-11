@@ -45,8 +45,9 @@ class PersonController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Person $person)
+    public function show($id)
     {
+        $person = Person::find($id);
         if (!$person->id) {
             return response()->json(['status_code'=>404 ,'status'=>'error', 'message' => 'person does not exist']);
         } else {
