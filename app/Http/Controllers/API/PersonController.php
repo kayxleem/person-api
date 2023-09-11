@@ -64,7 +64,7 @@ class PersonController extends Controller
     {
         $oldname = $person->name;
         $person->update($request->all());
-        return response()->json(['status_code'=>202 ,'status'=>'success', 'message' => 'The person with name ' . $oldname . ' has been changed to '. $person ] );
+        return response()->json(['status_code'=>202 ,'status'=>'success', 'message' => 'The person with name ' . $oldname . ' has been changed to '. $person->name ] );
     }
 
     /**
