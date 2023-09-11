@@ -53,7 +53,7 @@ class PersonApiTest extends TestCase
         $response
             ->assertStatus(200);
         $responsejson = $response;
-        $this->assertEquals("My First Person", $responsejson['name']);
+        $this->assertEquals("My First Person", $responsejson['person']['name']);
     }
 
     public function test_update_person()
