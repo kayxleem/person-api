@@ -24,7 +24,7 @@ class PersonController extends Controller
         if ($people->count() > 0) {
             return response()->json($people);
         } else {
-            return response()->json(['status_code'=>200 ,'status'=>'success', 'message' => 'No person found']);;
+            return response()->json(['status_code'=>Response::HTTP_NOT_FOUND ,'status'=>'success', 'message' => 'No person found']);;
         }
 
     }
@@ -49,9 +49,9 @@ class PersonController extends Controller
     {
         $person = Person::find($id);
         if (!$person) {
-            return response()->json(['status_code'=>404 ,'status'=>'error', 'message' => 'person does not exist']);
+            return response()->json(['status_code'=>Response::HTTP_NOT_FOUND ,'status'=>'error', 'message' => 'person does not exist']);
         } else {
-            return response()->json(['status_code'=>200 ,'status'=>'success', 'person' => $person]);;
+            return response()->json(['status_code'=>Response::HTTP_OK ,'status'=>'success', 'person' => $person]);;
         }
 
     }
@@ -64,7 +64,7 @@ class PersonController extends Controller
     {
         $oldname = $person->name;
         $person->update($request->all());
-        return response()->json(['status_code'=>202 ,'status'=>'success', 'message' => 'The person with name ' . $oldname . ' has been changed to '. $person->name ] );
+        return response()->json(['status_code'=>Response::HTTP_CREATED ,'status'=>'success', 'message' => 'The person with name ' . $oldname . ' has been changed to '. $person->name ] );
     }
 
     /**
@@ -74,6 +74,6 @@ class PersonController extends Controller
     {
         $name = $person->name;
         $person->delete();
-        return response()->json(['status_code'=>204 ,'status'=>'success', 'message' => 'The person with name ' . $name . ' was deleted successfully' ] );
+        return response()->json(['status_code'=>Response::HTTP_NO_CONTENT ,'status'=>'success', 'message' => 'The person with name ' . $name . ' was deleted successfully' ] );
     }
 }
