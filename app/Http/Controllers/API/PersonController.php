@@ -4,30 +4,39 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Person;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PersonRequest;
 use App\Http\Resources\PersonResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class PersonController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
+
         $people = Person::all();
-        return response()->json($people);
+        if ($people->count() > 0) {
+            return response()->json($people);
+        } else {
+            return response()->json(['status_code'=>200 ,'status'=>'success', 'message' => 'No person found']);;
+        }
 
     }
 
 
 
     /**
-     * Store a newly created resource in storage.
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
      */
-    public function store(PersonRequest $request)
+    public function store(PersonRequest $request): JsonResponse
     {
         $person = Person::create($request->all());
         return response()->json($person);
@@ -38,7 +47,12 @@ class PersonController extends Controller
      */
     public function show(Person $person)
     {
-        return response()->json($person);
+        if (!$person->id) {
+            return response()->json(['status_code'=>404 ,'status'=>'error', 'message' => 'person does not exist']);
+        } else {
+            return response()->json(['status_code'=>200 ,'status'=>'success', 'person' => $person]);;
+        }
+
     }
 
 
@@ -47,8 +61,9 @@ class PersonController extends Controller
      */
     public function update(PersonRequest $request, Person $person)
     {
+        $oldname = $person->name;
         $person->update($request->all());
-        return response()->json($person);
+        return response()->json(['status_code'=>202 ,'status'=>'success', 'message' => 'The person with name ' . $oldname . ' has been changed to '. $person ] );
     }
 
     /**
@@ -58,6 +73,6 @@ class PersonController extends Controller
     {
         $name = $person->name;
         $person->delete();
-        return response()->json(['status_code'=>204 ,'status'=>'success', 'message' => 'The person with ' . $name . ' was deleted successfully' ] );
+        return response()->json(['status_code'=>204 ,'status'=>'success', 'message' => 'The person with name ' . $name . ' was deleted successfully' ] );
     }
 }
