@@ -53,16 +53,18 @@ class PersonApiTest extends TestCase
         $response
             ->assertStatus(200);
         $responsejson = $response;
-        $this->assertEquals("My First Person", $responsejson['person']['name']);
+        $this->assertEquals("My First Person", $responsejson['name']);
     }
 
     public function test_update_person()
     {
+        $oldname =$this->person->name;
         $this->withoutExceptionHandling();
-        $response = $this->patchJson('api/'.$this->person->id, ['name' => 'updated name'])
-            ->assertOk();
+        $response = $this->patchJson('api/'.$this->person->id, ['name' => 'updated name']);
+
+        $this->assertEquals($oldname, $response['oldname']);
         $response
-            ->assertStatus(200);
+            ->assertStatus(201);
     }
 
     public function test_delete_person()
