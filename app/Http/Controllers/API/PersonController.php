@@ -64,7 +64,6 @@ class PersonController extends Controller
     public function update(Request $request, $id)
     {
         $person = Person::find($id);
-        $oldname = $person->name;
         if (!$person) {
             return response()->json(['status_code' => Response::HTTP_NOT_FOUND, 'status' => 'error', 'message' => 'person does not exist']);
         } else {
