@@ -39,7 +39,7 @@ class PersonController extends Controller
     public function store(PersonRequest $request): JsonResponse
     {
         $person = Person::create($request->all());
-        return response()->json($person);
+        return response()->json($person, Response::HTTP_CREATED);
     }
 
     /**
@@ -51,7 +51,7 @@ class PersonController extends Controller
         if (!$person) {
             return response()->json(['status_code' => Response::HTTP_NOT_FOUND, 'status' => 'error', 'message' => 'person does not exist']);
         } else {
-            return response()->json($person);
+            return response()->json($person, Response::HTTP_OK);
         }
 
     }
@@ -66,8 +66,10 @@ class PersonController extends Controller
         if (!$person) {
             return response()->json(['status_code' => Response::HTTP_NOT_FOUND, 'status' => 'error', 'message' => 'person does not exist']);
         } else {
+            $oldname = $person->name;
             $person->update($request->all());
-            return response()->json($person);
+            $person->oldname = $oldname;
+            return response()->json($person,201);
         }
 
     }
