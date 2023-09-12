@@ -24,7 +24,8 @@ class PersonController extends Controller
         if ($people->count() > 0) {
             return response()->json($people);
         } else {
-            return response()->json(['status_code'=>Response::HTTP_NOT_FOUND ,'status'=>'success', 'message' => 'No person found']);;
+            return response()->json(['status_code' => Response::HTTP_NOT_FOUND, 'status' => 'success', 'message' => 'No person found']);
+            ;
         }
 
     }
@@ -45,13 +46,13 @@ class PersonController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $person = Person::find($id);
         if (!$person) {
-            return response()->json(['status_code'=>Response::HTTP_NOT_FOUND ,'status'=>'error', 'message' => 'person does not exist']);
+            return response()->json(['status_code' => Response::HTTP_NOT_FOUND, 'status' => 'error', 'message' => 'person does not exist']);
         } else {
-            return response()->json(['status_code'=>Response::HTTP_OK ,'status'=>'success', 'person' => $person]);;
+            return response()->json($person);
         }
 
     }
@@ -60,20 +61,32 @@ class PersonController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(PersonRequest $request, Person $person)
+    public function update(Request $request, $id)
     {
+        $person = Person::find($id);
         $oldname = $person->name;
-        $person->update($request->all());
-        return response()->json(['status_code'=>Response::HTTP_CREATED ,'status'=>'success', 'message' => 'The person with name ' . $oldname . ' has been changed to '. $person->name ] );
+        if (!$person) {
+            return response()->json(['status_code' => Response::HTTP_NOT_FOUND, 'status' => 'error', 'message' => 'person does not exist']);
+        } else {
+            $person->update($request->all());
+            return response()->json($person);
+        }
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Person $person)
+    public function destroy($id)
     {
-        $name = $person->name;
-        $person->delete();
-        return response()->json(['status_code'=>Response::HTTP_NO_CONTENT ,'status'=>'success', 'message' => 'The person with name ' . $name . ' was deleted successfully' ] );
+        $person = Person::find($id);
+        if (!$person) {
+            return response()->json(['status_code' => Response::HTTP_NOT_FOUND, 'status' => 'error', 'message' => 'person does not exist']);
+        } else {
+            $name = $person->name;
+            $person->delete();
+            return response()->json(['status_code' => Response::HTTP_NO_CONTENT, 'status' => 'success', 'message' => 'The person with name ' . $name . ' was deleted successfully']);
+        }
+
     }
 }
