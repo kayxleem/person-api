@@ -25,7 +25,6 @@ class PersonController extends Controller
             return response()->json($people);
         } else {
             return response()->json(['status_code' => Response::HTTP_NOT_FOUND, 'status' => 'success', 'message' => 'No person found']);
-            ;
         }
 
     }
@@ -61,7 +60,7 @@ class PersonController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(PersonRequest $request, $id)
     {
         $person = Person::find($id);
         if (!$person) {
